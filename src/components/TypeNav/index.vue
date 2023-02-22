@@ -2,7 +2,35 @@
 <template>
     <div class="type-nav">
         <div class="container">
-            <h2 class="all">全部商品分类</h2>
+            <div  @mouseleave="leaveIndex">
+                <h2 class="all">全部商品分类</h2>
+                <div class="sort">
+                    <div class="all-sort-list2" @click="goSearch">
+                        <div class="item" v-for="(c1, index) in categoryList.slice(0, 16)" :key="c1.categoryId"
+                            :class="{ cur: currentIndex == index }">
+                            <h3 @mouseenter="changeIndex(index)">
+                                <a :data-catagoryname="c1.categoryName">{{ c1.categoryName }}</a>
+                            </h3>
+                            <div class="item-list clearfix" :style="{display:currentIndex==index?'block':'none'}">
+                                <div class="subitem" v-for="(c2, index) in c1.categoryChild.slice(0, 9)"
+                                    :key="c2.categoryId">
+                                    <dl class="fore">
+                                        <dt>
+                                            <a :data-catagoryname="c2.categoryName">{{ c2.categoryName }}</a>
+                                        </dt>
+                                        <dd>
+                                            <em v-for="(c3, index) in c2.categoryChild" :key="c3.categoryId">
+                                                <a :data-catagoryname="c3.categoryName">{{ c3.categoryName }}</a>
+                                            </em>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             <nav class="nav">
                 <a href="###">服装城</a>
                 <a href="###">美妆馆</a>
@@ -13,43 +41,51 @@
                 <a href="###">有趣</a>
                 <a href="###">秒杀</a>
             </nav>
-            <div class="sort">
-                <div class="all-sort-list2">
-                    <div class="item" v-for="(c1) in categoryList.slice(0, 16)" :key="c1.categoryId">
-                        <h3>
-                            <a href="">{{ c1.categoryName }}</a>
-                        </h3>
-                        <div class="item-list clearfix">
-                            <div class="subitem" v-for="(c2) in c1.categoryChild.slice(0,9)" :key="c2.categoryId" >
-                                <dl class="fore">
-                                    <dt>
-                                        <a href="">{{ c2.categoryName }}</a>
-                                    </dt>
-                                    <dd>
-                                        <em v-for="(c3) in c2.categoryChild" :key="c3.categoryId">
-                                            <a href="">{{ c3.categoryName }}</a>
-                                        </em>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
         </div>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+//按需加载
+import throttle from 'lodash/throttle';
 export default {
     name: 'TypeNav',
+    data() {
+        return {
+            currentIndex: -1
+        }
+    },
     mounted() {
         this.$store.dispatch('categoryList');
     },
     computed: {
         ...mapState({ categoryList: state => state.home.categoryList })
+    },
+    methods: {
+        //节流
+        changeIndex:throttle(function(index){
+            this.currentIndex = index;
+        },20),
+        leaveIndex() {
+            this.currentIndex = -1;
+        },
+        goSearch(event){
+            //最好的解决方案，编程式导航+事件委派
+            //问题：1.如何保证一定点击a标签。2. 如何获取参数【产品名字，id】
+            //this.$router.push('/search');
+            let element=event.target;//获取当前触发事件的节点，【h3，a，dt....】,需要的是带有data-categoryName的节点【a标签】
+            //节点自带dataset属性，可以获取自定义属性和属性值
+            // let {categoryname}=element.dataset;
+            // if(categoryname){
+            //     alert(123);
+            // }
+            // console.log(element.dataset);
+            let {categoryname}=element.dataset;
+            if(categoryname){
+                alert(123);
+            }
+        }
     }
 };
 
@@ -165,14 +201,12 @@ export default {
                         }
                     }
 
-                    &:hover {
-                        .item-list {
-                            display: block;
-                        }
-                    }
+                }
+
+                .cur {
+                    background: skyblue;
                 }
             }
         }
     }
-}
-</style>
+}</style>

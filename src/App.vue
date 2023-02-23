@@ -23,10 +23,11 @@ export default {
     router,
     Header,
     Footer
-}
+  },
+  mounted(){
+    this.$store.dispatch('categoryList');//挂载组件
+  },
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

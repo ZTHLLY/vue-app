@@ -8,6 +8,7 @@ import router from './router';
 import TypeNav from '@/components/TypeNav';//引入并注册为全局组件
 // import {reqCategoryList} from '@/api';
 import store from './store';
+import './mock/mockServe';
 
 // reqCategoryList();
 Vue.component(TypeNav.name,TypeNav);//注册为全局组件

@@ -26,6 +26,8 @@ export default {
   },
   mounted(){
     this.$store.dispatch('categoryList');//挂载组件
+    this.$store.dispatch('bannerList');//挂载的时候派发action
+    this.$store.dispatch('floorList');
   },
 }
 </script>

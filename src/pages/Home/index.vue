@@ -4,16 +4,28 @@
     <div>
         <TypeNav />
         <ListContainer />
+        <Brand/>
+        <Rank/>
+        <Recommend/>
+        <Floor/>
     </div>
 
 </template>
 
 <script>
 import ListContainer from '@/pages/Home/ListContainer'; 
+import Brand from '@/pages/Home/Brand';
+import Rank from '@/pages/Home/Rank';
+import Recommend from '@/pages/Home/Recommend';
+import Floor from '@/pages/Home/Floor';
 export default {
     name: '',
     components:{
-        ListContainer
+        ListContainer,
+        Brand,
+        Rank,
+        Recommend,
+        Floor,
     }
 }
 </script>

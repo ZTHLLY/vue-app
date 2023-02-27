@@ -104,8 +104,12 @@ export default {
                 } else {
                     query.category3Id = category3id;
                 }
-                location.query = query;
-                this.$router.push(location);
+                if (this.$route.params) {
+                    location.params=this.$route.params;
+                    location.query = query;
+                    this.$router.push(location);
+                }
+
             }
         },
     },
@@ -230,11 +234,13 @@ export default {
                 }
             }
         }
-        .sort-enter{
+
+        .sort-enter {
             height: 0px;
-            
+
         }
-        .sort-enter-active{
+
+        .sort-enter-active {
             transition: all .5s linear !important;
             overflow: hidden;
         }

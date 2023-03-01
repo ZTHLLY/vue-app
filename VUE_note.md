@@ -251,7 +251,23 @@ export const reqCategoryList=()=>requests({url:'/product/getBaseCategoryList',me
 
 ## nprogress进度条
 
-请求时start,结束时done，注意引入样式"nprogress/nprogress.css"
+请求时start,结束时done，注意引入样式"nprogress/nprogress.css"，在api文件下使用
+
+```js
+requests.interceptors.request.use((config)=>{
+    nProgress.start();
+    return config;
+});
+
+requests.interceptors.response.use((res)=>{
+    nProgress.done();
+    return res.data;
+},(error)=>{
+    return Promise.reject(new Error('faile'));
+})
+```
+
+
 
 ## vuex
 
@@ -385,4 +401,35 @@ v-for是vue.js的循环语句，语法为：v-for=" a in b"，每一个对象为
 ![image-20230222102712431](C:\Users\silverbullets\AppData\Roaming\Typora\typora-user-images\image-20230222102712431.png)
 
 ## 三级联动路由跳转
+
+
+
+## search模块的商品分类和过渡动画
+
+组件|元素的过渡动画必须有v-show或者v-if指令，动画分为开始阶段和结束阶段
+
+## typenav优化服务器请求次数过多
+
+在app跟组件当中发请求，因为跟组件只会执行一次
+
+## 合并参数
+
+合并params和query参数，加判断就行
+
+## 模拟数据
+
+用到mock.js模拟数据，对于服务器还暂时没有返回地址的组件可以使用，原理就是拦截掉发出的请求，并模拟返回结果，并没有真正的发送请求成功到后端
+
++ 先创建mock文件夹，用来提供假数据
++ 准备JSON数据（自己创建相应的文件）----注意要格式化
++ 把mock数据需要的图片放置到public文件夹中【public文件夹打包的时候会把相应资源放到dist文件夹中】
++ mock虚拟数据，创建mockServe.js，json数据格式引入的时候不需要再暴露了，他和图片都是默认暴露的，js才要刻意export对外暴露
++ mock的数据第一个参数是请求地址，第二个参数是请求的数据
++ 把mockserve.js文件在入口文件引入，执行，直接import就好
+
+## 获取数据
+
+
+
+## 轮播图
 

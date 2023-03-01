@@ -9,6 +9,7 @@ import TypeNav from '@/components/TypeNav';//引入并注册为全局组件
 // import {reqCategoryList} from '@/api';
 import store from './store';
 import './mock/mockServe';
+import "swiper/css/swiper.css";
 
 // reqCategoryList();
 Vue.component(TypeNav.name,TypeNav);//注册为全局组件

@@ -12,7 +12,8 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i
+                @click="removeCategoryName">×</i></li>
           </ul>
         </div>
 
@@ -155,21 +156,23 @@ export default {
     getData() {
       this.$store.dispatch('getSearchList', this.searchParams);
     },
-    removeCategoryName(){
-      this.searchParams.categoryName='';
+    resetCatagoryId() {
       this.searchParams.category1Id = '';
       this.searchParams.category2Id = '';
       this.searchParams.category3Id = '';
-      this.getData()
-    }
+    },
+    removeCategoryName() {
+      this.searchParams.categoryName = '';
+      this.resetCatagoryId();
+      this.getData();
+    },
+
   },
   watch: {
     $route(newValue, oldValue) {
       Object.assign(this.searchParams, this.$route.params, this.$route.query);
       this.getData();
-      this.searchParams.category1Id = '';
-      this.searchParams.category2Id = '';
-      this.searchParams.category3Id = '';
+      this.resetCatagoryId();
       // this.searchParams.keyword='';
     }
   }

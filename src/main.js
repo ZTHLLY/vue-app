@@ -25,4 +25,7 @@ new Vue({
   store,//注册完之后组件实例身上多了一个叫&store的属性
   el: '#app',
   render: h => h(App),
+  beforeCreate(){
+    Vue.prototype.$bus=this;
+  }
 }).$mount('#app')

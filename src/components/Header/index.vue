@@ -33,7 +33,8 @@
             </h1>
             <div class="searchArea">
                 <form action="###" class="searchForm">
-                    <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword" />
+                    <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword"
+                        :placeholder="searchDetail" />
                     <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">搜索</button>
                 </form>
             </div>
@@ -46,7 +47,8 @@ export default {
     name: '',
     data() {
         return {
-            keyword: ''
+            keyword: '',
+            searchDetail: '输入搜索内容',
         }
     },
     methods: {
@@ -56,13 +58,19 @@ export default {
             //this.$router.push("/search/"+this.keyword+"?k="+this.keyword.toUpperCase());
             //用对象的方法，前面的不用了
             //{name:"search",params:{keyword:this.keyword||undefined}}
+            this.searchDetail = this.keyword;
             let location = { name: "search", params: { keyword: this.keyword || undefined } };
             location.query = this.$route.query;
             this.$router.push(location);
-
-
+            // this.keyword='';
         }
+    },
+    mounted() {
+        this.$bus.$on("clear", () => {
+            this.keyword = '';
+        })
     }
+
 }
 </script>
 

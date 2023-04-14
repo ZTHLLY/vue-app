@@ -14,6 +14,8 @@ import Select from './components/select.vue';
 import router from './router';
 import Header from './components/Header/index.vue';
 import Footer from './components/Footer/index.vue';
+import 'element-ui/lib/theme-chalk/index.css';
+import { Pagination } from 'element-ui';
 
 export default {
   name: 'App',
@@ -22,14 +24,21 @@ export default {
     Select,
     router,
     Header,
-    Footer
+    Footer,
+    Pagination
   },
-  mounted(){
+  mounted() {
     this.$store.dispatch('categoryList');//挂载组件
     this.$store.dispatch('bannerList');//挂载的时候派发action
     this.$store.dispatch('floorList');
   },
+  methods:{
+  }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.pagination {
+  text-align: center;
+}
+</style>

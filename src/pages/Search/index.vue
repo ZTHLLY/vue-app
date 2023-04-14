@@ -12,38 +12,37 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i @click="removeCategoryName">×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}<i
+                @click="removeCategoryName">×</i></li>
             <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}<i @click="removeKeyword">×</i></li>
-            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(":")[1] }}<i @click="removeTradeName">×</i></li>
-            <li class="with-x" v-for="(props,index) in searchParams.props">{{ props.split(":")[1] }}<i @click="removeProps(index)">×</i></li>
+            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(":")[1] }}<i
+                @click="removeTradeName">×</i></li>
+            <li class="with-x" v-for="(props, index) in searchParams.props">{{ props.split(":")[1] }}<i
+                @click="removeProps(index)">×</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo"/>
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: searchParams.order.indexOf('1') != -1 }" @click="changeorder('1')">
+                  <a
+                    v-show="searchParams.order.indexOf('1') != -1 && searchParams.order.indexOf('asc') != -1">综合<span>↑</span></a>
+                  <a
+                    v-show="searchParams.order.indexOf('1') != -1 && searchParams.order.indexOf('desc') != -1">综合<span>↓</span></a>
+                  <a v-show="searchParams.order.indexOf('2') != -1">综合</a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: searchParams.order.indexOf('2') != -1 }" @click="changeorder('2')">
+                  <a
+                    v-show="searchParams.order.indexOf('2') != -1 && searchParams.order.indexOf('asc') != -1">价格<span>↑</span></a>
+                  <a
+                    v-show="searchParams.order.indexOf('2') != -1 && searchParams.order.indexOf('desc') != -1">价格<span>↓</span></a>
+                  <a v-show="searchParams.order.indexOf('1') != -1">价格</a>
                 </li>
               </ul>
             </div>
@@ -75,44 +74,20 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <!-- <div>总共有{{ searchList.total }}条数据，每页10条数据，总共有{{ searchList.totalPages }}页数据</div> -->
+          <el-pagination background layout="prev, pager, next" :hide-on-single-page="true" :total="searchList.total"
+           @current-change="handleCurrentChange"> 
+          </el-pagination>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
 import SearchSelector from './SearchSelector/SearchSelector';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState} from 'vuex';
 export default {
   name: 'Search',
   data() {
@@ -129,7 +104,7 @@ export default {
         //分类关键字
         "keyword": "",
         //排序
-        "order": "",
+        "order": "1:asc",
         //代表当前第几页
         "pageNo": 1,
         //代表总共多少页
@@ -138,9 +113,8 @@ export default {
         "props": [],
         //品牌
         "trademark": ""
-      }
+      },
     }
-
   },
   components: {
     SearchSelector
@@ -153,6 +127,9 @@ export default {
   },
   computed: {
     ...mapGetters(['goodsList']),
+    ...mapState({
+      searchList: state=>state.search.searchList
+    })
   },
   methods: {
     getData() {
@@ -168,33 +145,51 @@ export default {
       this.resetCatagoryId();
       this.getData();
     },
-    removeKeyword(){
-      this.searchParams.keyword='';
+    removeKeyword() {
+      this.searchParams.keyword = '';
       this.getData();
       this.$bus.$emit("clear");
-      this.$router.push({name:"search",query:this.$route.query});
+      this.$router.push({ name: "search", query: this.$route.query });
     },
-    removeTradeName(){
-      this.searchParams.trademark='';
+    removeTradeName() {
+      this.searchParams.trademark = '';
       this.getData();
     },
-    trademarkInfo(trademark){
+    trademarkInfo(trademark) {
       // console.log("父组件收到",trademark);
-      this.searchParams.trademark=`${trademark.tmId}:${trademark.tmName}`;
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
       this.getData();
     },
-    attrInfo(attr,attrvalue){
-      console.log(attr,attrvalue);
-      let props=`${attr.attrId}:${attrvalue}:${attr.attrName}`;
-      if(this.searchParams.props.indexOf(props)==-1){
+    attrInfo(attr, attrvalue) {
+      console.log(attr, attrvalue);
+      let props = `${attr.attrId}:${attrvalue}:${attr.attrName}`;
+      if (this.searchParams.props.indexOf(props) == -1) {
         this.searchParams.props.push(props);
         this.getData();
       };
     },
-    removeProps(index){
-      this.searchParams.props.slice(index,1);
+    removeProps(index) {
+      this.searchParams.props.splice(index, 1);
       this.getData();
-    }
+    },
+    changeorder(flag) {
+      console.log(flag)
+      // var originOrder1=this.searchParams.order.split(":")[0]
+      var originOrder2 = this.searchParams.order.split(":")[1]
+      // console.log('originOrder2=>',originOrder2)
+      var newOrder2 = ''
+      originOrder2 == 'desc' ? newOrder2 = 'asc' : newOrder2 = 'desc'
+      // console.log('newOrder2=>',newOrder2)
+      var newOrder = `${flag}:${newOrder2}`
+      // console.log('newOrder=>',newOrder)
+      this.searchParams.order = newOrder
+      this.getData()
+    },
+    handleCurrentChange(e){
+      this.searchParams.pageNo=e
+      console.log(e)
+      this.getData()
+    },
   },
   watch: {
     $route(newValue, oldValue) {
@@ -453,6 +448,9 @@ export default {
         }
       }
 
+      .el-pagination{
+        text-align: center;
+      }
       .page {
         width: 733px;
         height: 66px;
@@ -542,5 +540,4 @@ export default {
       }
     }
   }
-}
-</style>
+}</style>

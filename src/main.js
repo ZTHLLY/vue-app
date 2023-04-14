@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import { Button,Select } from 'element-ui';
+import { Button,Select,Pagination } from 'element-ui';
 import VueRouter from 'vue-router';
 import router from './router';
 import TypeNav from '@/components/TypeNav';//引入并注册为全局组件
@@ -17,6 +17,7 @@ Vue.use(VueRouter);
 Vue.use(ElementUI);
 Vue.use(Button)
 Vue.use(Select)
+Vue.use(Pagination)
 Vue.config.productionTip = false
 
 new Vue({
